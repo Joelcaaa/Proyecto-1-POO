@@ -1,1 +1,54 @@
+#include <iostream>
+using namespace std;
 
+const int n = 16;
+
+int **crearmatriz(int filas, int columnas){
+    int **p = new int*[filas];
+    for (int i = 0; i < filas; ++i)
+        p[i] = new int[columnas];
+    return p;
+}
+void imagen(int **const p, int filas, int columnas, int c=0, int u=1, int a=1, int lar=1){
+    columnas*=a;
+    filas*=lar;
+    for(int i = 0; i < filas; ++i)
+        for(int j = 0; j < columnas; ++j)
+            p[i][j] = c;
+    for (int k = 0; k < 3*lar ; ++k)
+        for (int l = (columnas/2)-2*a; l < (columnas/2)+2*a; ++l)
+            p[k][l] = u;
+
+    for (int k = 0; k < columnas ; ++k)
+        p[4*lar][k]=u;
+
+    for (int k = 4*lar; k < (filas/2)+1*lar ; ++k)
+        for (int l = (columnas/2)-2*a; l < (columnas/2)+2*a; ++l)
+            p[k][l] = u;
+
+    for (int k = (filas/2)+1*lar; k < filas ; ++k)
+        for (int l = (columnas/2)-3*a; l < (columnas/2)-a; ++l){
+            p[k][l] = u;
+            p[k][l+4*a] = u;
+        }
+}
+void print(int **const p, int filas, int columnas, int a=1, int lar=1){
+    columnas*=a;
+    filas*=lar;
+    for(int i = 0; i < filas; ++i) {
+        for (int j = 0; j < columnas; ++j)
+            cout << p[i][j];
+        cout << endl;
+    }
+    cout << endl << endl;
+}
+
+
+int main() {
+    int **p=crearmatriz(n,n);
+    imagen(p,n,n);
+    print(p,n,n);
+    imagen(p,n,n,0,1,2);
+    print(p,n,n,2);
+    return 0;
+}
