@@ -1,6 +1,10 @@
 #include <iostream>
 using namespace std;
 
+/* -- CHICOS DISCULPEN POR BORRAR LA PARTE QUE HICIERON, EN GENERAL ESTA MUY BIEN, PERO CREO QUE SE COMPLICARON UN POCO CON EL CÓDIGO
+POR ESO HE TRATADO DE SIMPLIFICAR LO QUE HICIERON LO MÁS QUE PUDE Y LO COMBINÉ CON LO QUE HICE, ESPERO NO LES INCOMODE  
+CUALQUIER DUDA ME PREGUNTAN -- */
+
 const int n = 16;
 
 int **crearmatriz(int filas, int columnas){
@@ -9,119 +13,131 @@ int **crearmatriz(int filas, int columnas){
         p[i] = new int[columnas];
     return p;
 }
-void imagen(int **const p, int filas, int columnas, int c=0, int u=1, int a=1, int lar=1){
-    columnas*=a;
-    filas*=lar;
+void imagen(int **const p, int filas, int columnas, bool invertir){
+    int c=0, u=1;
+    if (invertir)
+        c=1; u = 0;
+
     for(int i = 0; i < filas; ++i)
         for(int j = 0; j < columnas; ++j)
             p[i][j] = c;
-    for (int k = 0; k < 3*lar ; ++k)
-        for (int l = (columnas/2)-2*a; l < (columnas/2)+2*a; ++l)
+
+    for (int k = 0; k < 3 ; ++k)
+        for (int l = (columnas/2)-(2); l < (columnas/2)+(2); ++l)
             p[k][l] = u;
 
     for (int k = 0; k < columnas ; ++k)
-        p[4*lar][k]=u;
+        p[4][k]=u;
 
-    for (int k = 4*lar; k < (filas/2)+1*lar ; ++k)
-        for (int l = (columnas/2)-2*a; l < (columnas/2)+2*a; ++l)
+    for (int k = 4; k < (filas/2)+1 ; ++k)
+        for (int l = (columnas/2)-2; l < (columnas/2)+2; ++l)
             p[k][l] = u;
 
-    for (int k = (filas/2)+1*lar; k < filas ; ++k)
-        for (int l = (columnas/2)-3*a; l < (columnas/2)-a; ++l){
+    for (int k = (filas/2)+1; k < filas ; ++k)
+        for (int l = (columnas/2)-3; l < (columnas/2)-1; ++l){
             p[k][l] = u;
-            p[k][l+4*a] = u;
+            p[k][l+4] = u;
         }
 }
-void print(int **const p, int filas, int columnas, int a=1, int lar=1){
-    columnas*=a;
-    filas*=lar;
+void print(int ** p, int filas, int columnas, int ancho, int largo){
     for(int i = 0; i < filas; ++i) {
-        for (int j = 0; j < columnas; ++j)
-            cout << p[i][j];
-        cout << endl;
-    }
-    cout << endl << endl;
-}
-
-void imageni(int **const p, int filas, int columnas, int c=0, int u=1, int a=1, int lar=1){
-    columnas*=a;
-    filas*=lar;
-    for(int i = 0; i < filas; ++i)
-        for(int j = 0; j < columnas; ++j)
-            p[i][j] = c;
-
-    for (int k = (filas/2)-(2*a); k <(columnas/2)+(
-          2*a) ; ++k)
-        for (int l = 0; l < 3*lar; ++l)
-            p[k][l] = u;
-
-    for (int l = 0; l < filas ; ++l)
-        p[l][4*lar]=u;
-        
-    for (int k =(columnas/2)-(2*a) ; k <(columnas/2)+(2*a) ; ++k)
-        for (int l = 4*lar; l <  (filas/2)+1*lar; ++l)
-            p[k][l] = u;
-
-    for (int k =  (filas/2)-(3*a); k <(filas/2)-a ; ++k)
-        for (int l =(columnas/2)+1*lar; l < columnas; ++l){
-            p[k][l] = u;
-            p[k+4*a][l] = u;
+        for (int l = 0; l < largo; ++l){
+            for (int j = 0; j < columnas; ++j){
+                for (int k = 0; k < ancho; ++k) {
+                    cout << p[i][j];
+                }
+            }  cout << endl;
         }
-}
-void printi(int **const p, int filas, int columnas, int a=1, int lar=1){
-    columnas*=a;
-    filas*=lar;
-    for(int i = 0; i < filas; ++i) {
-        for (int j = 0; j < columnas; ++j)
-            cout << p[i][j];
-        cout << endl;
-    }
-    cout << endl << endl;
+    }  cout << endl << endl;
 }
 
-void imagenv(int **const p, int filas, int columnas, int c=0, int u=1, int a=1, int lar=1){
-    columnas*=a;
-    filas*=lar;
-    for(int i = 0; i < filas; ++i)
-        for(int j = 0; j < columnas; ++j)
-            p[i][j] = c;
-    for (int k = columnas-(3*lar); k <columnas; k++)
-        for (int l = (columnas/2)-(2*a); l < (columnas/2)+(
-          2*a); ++l)
-            p[k][l] = u;
-    for (int k = 0; k < columnas ; ++k)
-        p[15-4*lar][k]=u;
-    for (int k =11- 4*lar; k <11 ; k++)
-        for (int l = (columnas/2)-(2*a); l < (columnas/2)+(2*a); ++l)
-            p[k][l] = u;
-     for (int k =0;k<(filas/2)*lar; k++)
-        for (int l = (columnas/2)-(3*a); l < (columnas/2)-a; ++l){
-            p[k][l] = u;
-            p[k][l+4*a] = u;
+void rotar(int ** p, int filas, int columnas, int dir){
+    if (dir == 1){
+        for (int i = columnas-1; i >= 0; --i){
+            for (int j = 0; j < filas ; ++j)
+                cout << p[j][i];
+            cout << endl;
+        }  cout << endl << endl;
+    } else
+    if (dir == 2) {
+        for (int i = 0; i < columnas ; ++i){
+            for (int j = filas-1; j >= 0; --j)
+                cout << p[j][i];
+            cout << endl;
+        }  cout << endl << endl;
+    } else
+    if (dir == 3) {
+        for (int i = columnas-1; i >= 0; --i){
+            for (int j = 0; j < filas ; ++j)
+                cout << p[i][j];
+            cout << endl;
+        }  cout << endl << endl;
+    }
+}
+
+void opciones() {
+    cout << "Elije una opcion para modificar la imagen original--" << endl;
+    cout << "1: Invertir colores" << endl;
+    cout << "2: Ensachar" << endl;
+    cout << "3: Alargar" << endl;
+    cout << "4: Agrandar" << endl;
+    cout << "5: Rotar 90 grados a la izquierda" << endl;
+    cout << "6: Rotar 90 grados a la derecha" << endl;
+    cout << "7: Rotar 180 grados" << endl;
+    cout << "0: Salir [x]" << endl;
+}
+
+void menu (int**p, int n) {
+    int opcion;
+    do {
+        opciones();
+        cin >> opcion;
+        cout << endl;
+        switch (opcion){
+            int ancho, largo, aumento;
+            case 0:
+                break;
+            case 1:
+                imagen(p, n, n, true);
+                print(p, n, n, 1, 1);
+                imagen(p, n, n, false);
+                break;
+            case 2:
+                cout << "Ensanchar por: ";
+                cin >> ancho;
+                print(p, n, n, ancho, 1);
+                break;
+            case 3:
+                cout << "Alargar por: ";
+                cin >> largo;
+                print(p, n, n, 1, largo);
+                break;
+            case 4:
+                cout << "Agrandar por: ";
+                cin >> aumento;
+                print(p, n, n, aumento, aumento);
+                break;
+            case 5:
+                rotar(p, n, n, 1);
+                break;
+            case 6:
+                rotar(p, n, n, 2);
+                break;
+            case 7:
+                rotar(p, n, n, 3);
+                break;
+            default:
+                cout << "La entrada no es valida" << endl << endl;
         }
-
-           
-}
-void printv(int **const p, int filas, int columnas, int a=1, int lar=1){
-    columnas*=a;
-    filas*=lar;
-    for(int i = 0; i < filas; ++i) {
-        for (int j = 0; j < columnas; ++j)
-            cout << p[i][j];
-        cout << endl;
-    }
-    cout << endl << endl;
+    } while (opcion != 0);
+    cout << "-- HASTA LA PROXIMA --";
 }
 
 int main() {
-    int **p=crearmatriz(n,n);
-    imagen(p,n,n);
-    print(p,n,n);
-    imagen(p,n,n,0,1,2);
-    print(p,n,n,2);
-    imageni(p,n,n);
-    printi(p,n,n);
-    imagenv(p,n,n);
-    printv(p,n,n);
+    int **p = crearmatriz(n, n);
+    imagen(p, n, n, false);
+    cout << endl << "-- BIENVENIDO --" << endl << endl;
+    print(p, n, n, 1, 1);
+    menu(p, n);
     return 0;
 }
